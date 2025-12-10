@@ -1,9 +1,12 @@
+#include <filesystem>
+
 #include "EventHandler.h"
 #include "scssdk.h"
 #include "scssdk_telemetry.h"
 #include <memory>
 
 #include "DebugConsole.hpp"
+#include "DiscordRichPresence.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/callback_sink.h"
@@ -34,7 +37,7 @@ extern "C" {
                 else if (msg.level == spdlog::level::err)
                     logLevel = SCS_LOG_TYPE_error;
 
-                auto message = std::string(msg.payload.data(), msg.payload.size());
+                const auto message = std::string(msg.payload.data(), msg.payload.size());
 
                 // Send the log message to the game
                 EventHandler::GetInitParams()->common.log(logLevel, ("[scsdrpc] " + message).c_str());
@@ -42,12 +45,13 @@ extern "C" {
         // @formatter:on
 
         auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        //auto fileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("scsdrpc.log", true);
         spdlog::logger logger("scsdrpc", {consoleSink, callbackSink});
         spdlog::register_logger(std::make_shared<spdlog::logger>(logger));
         spdlog::set_default_logger(std::make_shared<spdlog::logger>(logger));
 
         EventHandler::Initialize(initParams);
+        spdlog::info("Current path: {}", std::filesystem::current_path().string());
+        DiscordRichPresence::GetInstance().Initialize();
 
         spdlog::info("Initialized successfully!");
         return SCS_RESULT_ok;
@@ -56,6 +60,7 @@ extern "C" {
     // ReSharper disable once CppInconsistentNaming
     SCSSDK_EXPORT SCSAPI_VOID scs_telemetry_shutdown()
     {
+        DiscordRichPresence::GetInstance().StopThread();
     }
 }
 

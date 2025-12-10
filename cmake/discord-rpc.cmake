@@ -1,15 +1,21 @@
 cmake_minimum_required(VERSION 3.31)
 include(FetchContent)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 26)
 
 set(DISCORD_SDK_LIB_FOLDER ${CMAKE_BINARY_DIR}/External/DiscordSdk/lib/x86_64)
 if(WIN32)
-    set(DISCORD_SDK_LIB_PATH ${DISCORD_SDK_LIB_FOLDER}/discord_game_sdk.dll.lib)
+    set(DISCORD_SDK_LIB_NAME discord_game_sdk.dll.lib)
 else()
-    set(DISCORD_SDK_LIB_PATH ${DISCORD_SDK_LIB_FOLDER}/discord_game_sdk.so)
+    set(DISCORD_SDK_LIB_NAME discord_game_sdk.so)
+    # On Linux, the shared library needs to have a "lib" prefix
+    execute_process (
+            COMMAND bash -c "cp ${DISCORD_SDK_LIB_FOLDER}/discord_game_sdk.so ${DISCORD_SDK_LIB_FOLDER}/libdiscord_game_sdk.so"
+    )
 endif()
 
+set(DISCORD_SDK_LIB_PATH ${DISCORD_SDK_LIB_FOLDER}/${DISCORD_SDK_LIB_NAME})
 set(DISCORD_SDK_SRC_PATH ${CMAKE_BINARY_DIR}/External/DiscordSdk/cpp)
 
 FetchContent_Declare(DiscordSdk
@@ -55,4 +61,14 @@ add_library(DiscordSdk STATIC
 
 target_include_directories(DiscordSdk PUBLIC
         ${DISCORD_SDK_SRC_PATH}
+)
+
+add_library(discord_game_sdk STATIC IMPORTED)
+set_target_properties(discord_game_sdk PROPERTIES
+        IMPORTED_LOCATION ${DISCORD_SDK_LIB_NAME}
+        IMPORTED_NO_SONAME TRUE
+)
+
+target_link_libraries(DiscordSdk PUBLIC
+        discord_game_sdk
 )

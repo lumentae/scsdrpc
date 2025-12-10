@@ -3,6 +3,9 @@ project(scsdrpc)
 
 message("Configuring project: ${PROJECT_NAME}")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_CXX_STANDARD 26)
+
 message("Fetching Discord SDK...")
 include(cmake/discord-rpc.cmake)
 
@@ -11,8 +14,6 @@ include(cmake/scsmodsdk.cmake)
 
 message("Fetching spdlog...")
 include(cmake/spdlog.cmake)
-
-set(CMAKE_CXX_STANDARD 26)
 
 file(GLOB_RECURSE SRC_FILES
         CONFIGURE_DEPENDS
@@ -34,6 +35,11 @@ target_include_directories(scsdrpc PRIVATE
 target_link_libraries(scsdrpc PRIVATE
         DiscordSdk
         spdlog::spdlog
+)
+
+set_target_properties(scsdrpc PROPERTIES
+        BUILD_RPATH "$ORIGIN"
+        INSTALL_RPATH "$ORIGIN"
 )
 
 install(

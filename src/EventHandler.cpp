@@ -4,6 +4,7 @@
 #include <cstring>
 #include <common/scssdk_telemetry_common_configs.h>
 
+#include "DiscordRichPresence.h"
 #include "spdlog/spdlog.h"
 
 void EventHandler::Initialize(scs_telemetry_init_params_v100_t* initParams)
@@ -81,6 +82,10 @@ void EventHandler::TelemetryConfiguration(const scs_event_t, const void* const e
                     spdlog::warn("Unhandled attribute type: {}", attr->value.type);
                     break;
             }
+            if (strcmp(attr->name, SCS_TELEMETRY_CONFIG_ATTRIBUTE_source_city) == 0)
+                m_telemetry.sourceCityName = attr->value.value_string.value;
+            else if (strcmp(attr->name, SCS_TELEMETRY_CONFIG_ATTRIBUTE_destination_city) == 0)
+                m_telemetry.destinationCityName = attr->value.value_string.value;
         }
     }
 }
