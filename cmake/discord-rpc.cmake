@@ -1,11 +1,19 @@
+cmake_minimum_required(VERSION 3.31)
 include(FetchContent)
 
-set(DISCORD_SDK_LIB_PATH ${CMAKE_BINARY_DIR}/External/DiscordSdk/lib/x86_64/discord_game_sdk.dll.lib)
-set(DISCORD_SDK_DLL_PATH ${CMAKE_BINARY_DIR}/External/DiscordSdk/lib/x86_64/discord_game_sdk.dll)
+set(CMAKE_CXX_STANDARD 26)
+
+set(DISCORD_SDK_LIB_FOLDER ${CMAKE_BINARY_DIR}/External/DiscordSdk/lib/x86_64)
+if(WIN32)
+    set(DISCORD_SDK_LIB_PATH ${DISCORD_SDK_LIB_FOLDER}/discord_game_sdk.dll.lib)
+else()
+    set(DISCORD_SDK_LIB_PATH ${DISCORD_SDK_LIB_FOLDER}/discord_game_sdk.so)
+endif()
+
 set(DISCORD_SDK_SRC_PATH ${CMAKE_BINARY_DIR}/External/DiscordSdk/cpp)
 
 FetchContent_Declare(DiscordSdk
-        URL "https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip"
+        URL "https://dl-game-sdk.discordapp.net/3.2.1/discord_game_sdk.zip"
         SOURCE_DIR ${CMAKE_BINARY_DIR}/External/DiscordSdk
 )
 
@@ -47,8 +55,4 @@ add_library(DiscordSdk STATIC
 
 target_include_directories(DiscordSdk PUBLIC
         ${DISCORD_SDK_SRC_PATH}
-)
-
-target_link_libraries(DiscordSdk PUBLIC
-        ${DISCORD_SDK_LIB_PATH}
 )
