@@ -1,5 +1,7 @@
 #include "DiscordRichPresence.h"
 
+#include <cmath>
+
 #include "EventHandler.h"
 #include "spdlog/spdlog.h"
 
@@ -26,16 +28,29 @@ void DiscordRichPresence::Initialize()
     m_activity.SetName(EventHandler::GetInitParams()->common.game_name);
     m_activity.SetState("In menu");
     m_activity.SetDetails("No active job...");
+    m_activity.GetTimestamps().SetStart(std::time(nullptr));
     m_activity.GetAssets().SetLargeImage("https://cdn.discordapp.com/app-icons/1402418075726254102/46bfdfc58e4eacbfde29b2461e118e78.png");
 
     StartThread();
     spdlog::info("Discord initialized successfully!");
 }
 
-void DiscordRichPresence::Update() const
+void DiscordRichPresence::Update()
 {
     if (!m_discordCore)
         return;
+
+    auto& telemetry = EventHandler::GetTelemetry();
+    if (telemetry.doingJob)
+    {
+        m_activity.SetDetails(std::format("{} -> {} | {} {}", telemetry.sourceCityName, telemetry.destinationCityName, telemetry.truckBrand, telemetry.truckName).c_str());
+        m_activity.SetState(std::format("{} km/h - {} km total distance", std::round(telemetry.speed * 3.6), telemetry.plannedDistanceKm).c_str());
+    }
+    else
+    {
+        m_activity.SetDetails("In menu");
+        m_activity.SetState("No active job...");
+    }
 
     m_discordCore->RunCallbacks();
     m_discordCore->ActivityManager().UpdateActivity(

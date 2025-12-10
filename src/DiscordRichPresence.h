@@ -1,6 +1,7 @@
 #pragma once
 #include <atomic>
 #include <thread>
+#include <cstdint>
 
 #include "core.h"
 
@@ -10,7 +11,7 @@ public:
     DiscordRichPresence();
     ~DiscordRichPresence();
     void Initialize();
-    void Update() const;
+    void Update();
     void StartThread();
     void StopThread();
 

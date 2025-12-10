@@ -6,13 +6,19 @@ class EventHandler
 public:
     struct Telemetry
     {
-        scs_string_t sourceCityName;
-        scs_string_t destinationCityName;
+        bool doingJob = false;
+        float speed{};
+        int navigationDistance{};
+        scs_string_t destinationCityName{};
+        scs_string_t sourceCityName{};
+        scs_string_t truckBrand{};
+        scs_string_t truckName{};
+        scs_u32_t plannedDistanceKm;
     };
 
-    static void Initialize(scs_telemetry_init_params_v100_t* initParams);
+    static void Initialize(const scs_telemetry_init_params_v100_t* initParams);
 
-    static Telemetry GetTelemetry()
+    static Telemetry& GetTelemetry()
     {
         return m_telemetry;
     }
