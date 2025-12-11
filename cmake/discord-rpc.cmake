@@ -25,6 +25,11 @@ FetchContent_Declare(DiscordSdk
 
 FetchContent_MakeAvailable(DiscordSdk)
 
+execute_process(
+        COMMAND patch --forward ${DISCORD_SDK_SRC_PATH}/types.h "${CMAKE_SOURCE_DIR}/external/patches/fix_gamesdk_compile.patch"
+        RESULT_VARIABLE PATCH_RESULT
+)
+
 add_library(DiscordSdk STATIC
         ${DISCORD_SDK_SRC_PATH}/achievement_manager.cpp
         ${DISCORD_SDK_SRC_PATH}/achievement_manager.h
@@ -63,12 +68,6 @@ target_include_directories(DiscordSdk PUBLIC
         ${DISCORD_SDK_SRC_PATH}
 )
 
-add_library(discord_game_sdk STATIC IMPORTED)
-set_target_properties(discord_game_sdk PROPERTIES
-        IMPORTED_LOCATION ${DISCORD_SDK_LIB_NAME}
-        IMPORTED_NO_SONAME TRUE
-)
-
 target_link_libraries(DiscordSdk PUBLIC
-        discord_game_sdk
+        ${DISCORD_SDK_LIB_PATH}
 )
