@@ -32,9 +32,9 @@ void EventHandler::TelemetryConfiguration(const scs_event_t, const void* const e
         for (auto attr = info->attributes; attr->name; ++attr) {
             m_telemetry.doingJob = true;
             if (strcmp(attr->name, SCS_TELEMETRY_CONFIG_ATTRIBUTE_source_city) == 0)
-                m_telemetry.sourceCityName = attr->value.value_string.value;
+                m_telemetry.sourceCityName = std::string(attr->value.value_string.value);
             else if (strcmp(attr->name, SCS_TELEMETRY_CONFIG_ATTRIBUTE_destination_city) == 0)
-                m_telemetry.destinationCityName = attr->value.value_string.value;
+                m_telemetry.destinationCityName = std::string(attr->value.value_string.value);
             else if (strcmp(attr->name, SCS_TELEMETRY_CONFIG_ATTRIBUTE_planned_distance_km) == 0)
                 m_telemetry.plannedDistanceKm = attr->value.value_u32.value;
         }
@@ -43,9 +43,9 @@ void EventHandler::TelemetryConfiguration(const scs_event_t, const void* const e
     {
         for (auto attr = info->attributes; attr->name; ++attr) {
             if (strcmp(attr->name, SCS_TELEMETRY_CONFIG_ATTRIBUTE_brand) == 0)
-                m_telemetry.truckBrand = attr->value.value_string.value;
+                m_telemetry.truckBrand = std::string(attr->value.value_string.value);
             if (strcmp(attr->name, SCS_TELEMETRY_CONFIG_ATTRIBUTE_name) == 0)
-                m_telemetry.truckName = attr->value.value_string.value;
+                m_telemetry.truckName = std::string(attr->value.value_string.value);
         }
     }
 }

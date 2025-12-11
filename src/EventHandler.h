@@ -1,5 +1,6 @@
 #pragma once
 #include <scssdk_telemetry.h>
+#include <string>
 
 class EventHandler
 {
@@ -9,10 +10,10 @@ public:
         bool doingJob = false;
         float speed{};
         int navigationDistance{};
-        scs_string_t destinationCityName{};
-        scs_string_t sourceCityName{};
-        scs_string_t truckBrand{};
-        scs_string_t truckName{};
+        std::string destinationCityName{};
+        std::string sourceCityName{};
+        std::string truckBrand{};
+        std::string truckName{};
         scs_u32_t plannedDistanceKm;
     };
 
