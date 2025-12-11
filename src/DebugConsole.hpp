@@ -2,6 +2,7 @@
 
 #if _DEBUG && defined(_WIN32)
 #include <io.h>
+#endif
 
 class DebugConsole
 {
@@ -20,4 +21,3 @@ private:
 
     bool m_Redirected;
 };
-#endif
