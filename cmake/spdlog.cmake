@@ -10,9 +10,4 @@ FetchContent_Declare(
         GIT_TAG        v1.x
 )
 
-FetchContent_GetProperties(spdlog)
-if (NOT spdlog_POPULATED)
-    FetchContent_MakeAvailable(spdlog)
-endif ()
-
-find_package(spdlog REQUIRED)
+FetchContent_MakeAvailable(spdlog)
