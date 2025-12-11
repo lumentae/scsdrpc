@@ -1,6 +1,6 @@
 # scsdrpc
 A WIP Discord Rich Presence for SCS Software games (Euro Truck Simulator, American Truck Simulator) using their telemetry api.  
-No releases yet, but will follow soon...
+No releases yet, but will come soon....
 
 ## Installation
 1. Download the latest release
