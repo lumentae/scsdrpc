@@ -3,25 +3,31 @@
 #if _DEBUG && defined(_WIN32)
 #include <cstdio>
 #include <windows.h>
+#endif
 
 DebugConsole::DebugConsole() :
         m_Redirected(false)
 {
+#if _DEBUG && defined(_WIN32)
     AllocConsole();
     AttachConsole(GetCurrentProcessId());
     SetConsoleTitleA("Debug Console");
 
     StartRedirecting();
+#endif
 }
 
 DebugConsole::~DebugConsole()
 {
+#if _DEBUG && defined(_WIN32)
     StopRedirecting();
     FreeConsole();
+#endif
 }
 
 void DebugConsole::StartRedirecting()
 {
+#if _DEBUG && defined(_WIN32)
     if (m_Redirected)
         StopRedirecting();
 
@@ -37,10 +43,12 @@ void DebugConsole::StartRedirecting()
     freopen_s(&s_Con, "CONOUT$", "w", stdout);
 
     SetConsoleOutputCP(CP_UTF8);
+#endif
 }
 
 void DebugConsole::StopRedirecting()
 {
+#if _DEBUG && defined(_WIN32)
     if (!m_Redirected)
         return;
 
@@ -49,5 +57,5 @@ void DebugConsole::StopRedirecting()
     _dup2(m_OriginalStdin, 0);
     _dup2(m_OriginalStdout, 1);
     _dup2(m_OriginalStderr, 2);
-}
 #endif
+}
