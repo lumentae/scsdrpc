@@ -4,6 +4,13 @@ include(FetchContent)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 26)
 
+FetchContent_Declare(DiscordSdk
+        URL "https://dl-game-sdk.discordapp.net/3.2.1/discord_game_sdk.zip"
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/External/DiscordSdk
+)
+
+FetchContent_MakeAvailable(DiscordSdk)
+
 set(DISCORD_SDK_LIB_FOLDER ${CMAKE_BINARY_DIR}/External/DiscordSdk/lib/x86_64)
 if(WIN32)
     set(DISCORD_SDK_LIB_NAME discord_game_sdk.dll.lib)
@@ -17,13 +24,6 @@ endif()
 
 set(DISCORD_SDK_LIB_PATH ${DISCORD_SDK_LIB_FOLDER}/${DISCORD_SDK_LIB_NAME})
 set(DISCORD_SDK_SRC_PATH ${CMAKE_BINARY_DIR}/External/DiscordSdk/cpp)
-
-FetchContent_Declare(DiscordSdk
-        URL "https://dl-game-sdk.discordapp.net/3.2.1/discord_game_sdk.zip"
-        SOURCE_DIR ${CMAKE_BINARY_DIR}/External/DiscordSdk
-)
-
-FetchContent_MakeAvailable(DiscordSdk)
 
 execute_process(
         COMMAND patch --forward ${DISCORD_SDK_SRC_PATH}/types.h "${CMAKE_SOURCE_DIR}/external/patches/fix_gamesdk_compile.patch"
