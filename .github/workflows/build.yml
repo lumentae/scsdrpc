@@ -1,0 +1,15 @@
+name: Build Release
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:    
+    uses: lumentae/actions/.github/workflows/build-cpp.yml@main
+  release:
+    permissions:
+        contents: write
+    needs: build
+    uses: lumentae/actions/.github/workflows/release.yml@main
